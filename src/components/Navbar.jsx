@@ -42,7 +42,7 @@ export default function Navbar() {
 
                         
                         <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#CA4317] to-violet-600">
-                            RU Events
+                            RU Event Manager
                         </span>
                     </Link>
 
