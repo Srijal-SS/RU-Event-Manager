@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
+import EventCard from '../components/EventCard';
 import { Search } from 'lucide-react';
 
 export default function Home() {
@@ -39,7 +40,7 @@ export default function Home() {
                         <input
                             type="text"
                             placeholder="Search by event name or tags..."
-                            className="block w-full pl-11 pr-4 py-4 bg-white border border-gray-200 rounded-2xl leading-5 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all shadow-sm text-base"
+                            className="block w-full pl-11 pr-4 py-4 bg-white border border-gray-200 rounded-2xl leading-5 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#e35221] focus:border-[#e35221] transition-all shadow-sm text-base"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -64,6 +65,23 @@ export default function Home() {
             </div>
 
 
+            {filteredEvents.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredEvents.map(event => (
+                        <EventCard key={event.id} event={event} />
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
+                    <p className="text-gray-500 text-lg">No events found matching your criteria.</p>
+                    <button
+                        onClick={() => { setSearchTerm(''); setFilter('All'); }}
+                        className="mt-4 text-indigo-600 font-medium hover:text-indigo-700"
+                    >
+                        Clear filters
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
