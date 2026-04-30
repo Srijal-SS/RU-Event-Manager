@@ -3,7 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import { useStore } from './store/useStore';
+import Auth from './pages/Auth';
 
+const ProtectedRoute = ({ children }) => {
+  const user = useStore((state) => state.user);
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 
 function App() {
@@ -13,7 +21,8 @@ function App() {
         <Navbar />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Auth />} />
+            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

@@ -21,7 +21,7 @@ export default function Navbar() {
 
     const navLinks = [
     { name: 'Events', path: '/', icon: Calendar },
-    ...(user.isAdmin ? [{ name: 'Create', path: '/create-event', icon: PlusCircle }] : []),
+    ...(user?.isAdmin ? [{ name: 'Create', path: '/create-event', icon: PlusCircle }] : []),
     { name: 'Profile', path: '/profile', icon: User },
   ];
 
