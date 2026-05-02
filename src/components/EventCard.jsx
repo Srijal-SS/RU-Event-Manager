@@ -11,7 +11,7 @@ export default function EventCard({ event }) {
 
     const [showDetails, setShowDetails] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
-    const [joinMode, setJoinMode] = useState(null);       // 'attendee' | 'participant' | 'volunteer'
+    const [joinMode, setJoinMode] = useState(null);
     const [selectedParticipantRole, setSelectedParticipantRole] = useState(null);
     const [selectedVolunteerRole, setSelectedVolunteerRole] = useState(null);
     const [joinConfirmed, setJoinConfirmed] = useState(false);

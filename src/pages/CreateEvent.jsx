@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { auth } from '../config/firebase';
 import { Calendar, Tag, MapPin, AlignLeft, List, UserCheck, Mic2, Wrench } from 'lucide-react';
 
 export default function CreateEvent() {
@@ -22,26 +21,71 @@ export default function CreateEvent() {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    let tagsArray = [];
+    let splitTags = formData.tags.split(',');
+    for (let i = 0; i < splitTags.length; i++) {
+        let tag = splitTags[i].trim();
+        if (tag !== "") {
+            tagsArray.push(tag);
+        }
+    }
+
+    let programsArray = [];
+    let splitPrograms = formData.programs.split('\n');
+    for (let i = 0; i < splitPrograms.length; i++) {
+        let prog = splitPrograms[i].trim();
+        if (prog !== "") {
+            programsArray.push(prog);
+        }
+    }
+
+    let attendeeRolesArray = [];
+    let splitAttendee = formData.attendeeRoles.split(',');
+    for (let i = 0; i < splitAttendee.length; i++) {
+        let role = splitAttendee[i].trim();
+        if (role !== "") {
+            attendeeRolesArray.push(role);
+        }
+    }
+
+    let participantRolesArray = [];
+    let splitParticipant = formData.participantRoles.split(',');
+    for (let i = 0; i < splitParticipant.length; i++) {
+        let role = splitParticipant[i].trim();
+        if (role !== "") {
+            participantRolesArray.push(role);
+        }
+    }
+
+    let managementRolesArray = [];
+    let splitManagement = formData.managementRoles.split(',');
+    for (let i = 0; i < splitManagement.length; i++) {
+        let role = splitManagement[i].trim();
+        if (role !== "") {
+            managementRolesArray.push(role);
+        }
+    }
+
+
     const newEvent = {
       title: formData.title,
       description: formData.description,
       date: new Date(formData.date).toISOString(),
       category: formData.category,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-      programs: formData.programs.split('\n').map(p => p.trim()).filter(Boolean),
-      attendeeRoles: formData.attendeeRoles.split(',').map(r => r.trim()).filter(Boolean),
-      participantRoles: formData.participantRoles.split(',').map(r => r.trim()).filter(Boolean),
-      managementRoles: formData.managementRoles.split(',').map(r => r.trim()).filter(Boolean),
+      tags: tagsArray,
+      programs: programsArray,
+      attendeeRoles: attendeeRolesArray,
+      participantRoles: participantRolesArray,
+      managementRoles: managementRolesArray,
       rsvps: [],
-      organizer: user.name,
-      userID: auth?.currentUser?.uid
+      organizer: user.name ?? '',
+      userID: user.id ?? null
     };
-    await addEvent(newEvent);
+    addEvent(newEvent);
     navigate('/');
-    await fetchEvents();
-  };
+  }; 
 
   const inputClass = "w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm";
   const iconClass = "absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400";
@@ -124,7 +168,6 @@ export default function CreateEvent() {
             </div>
           </div>
 
-          {/* ── Role Categories ── */}
           <div className="pt-4 border-t border-gray-100">
             <h3 className="text-base font-bold text-gray-900 mb-1">Event Roles by Category</h3>
             <p className="text-sm text-gray-500 mb-5">
@@ -132,7 +175,7 @@ export default function CreateEvent() {
             </p>
 
             <div className="space-y-4">
-              {/* Attendee roles */}
+
               <div className="p-5 bg-indigo-50 rounded-2xl border border-indigo-100">
                 <label className="flex items-center gap-2 text-sm font-semibold text-indigo-800 mb-1">
                   <UserCheck size={17} /> Attendee Roles
@@ -144,7 +187,6 @@ export default function CreateEvent() {
                 />
               </div>
 
-              {/* Participant roles */}
               <div className="p-5 bg-violet-50 rounded-2xl border border-violet-100">
                 <label className="flex items-center gap-2 text-sm font-semibold text-violet-800 mb-1">
                   <Mic2 size={17} /> Participant Roles
@@ -156,7 +198,6 @@ export default function CreateEvent() {
                 />
               </div>
 
-              {/* Management / Volunteer roles */}
               <div className="p-5 bg-amber-50 rounded-2xl border border-amber-100">
                 <label className="flex items-center gap-2 text-sm font-semibold text-amber-800 mb-1">
                   <Wrench size={17} /> Management / Volunteer Roles

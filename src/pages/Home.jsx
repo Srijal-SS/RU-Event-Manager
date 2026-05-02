@@ -1,22 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import EventCard from '../components/EventCard';
 import { Search } from 'lucide-react';
 
 export default function Home() {
 
-    const { events = [], user } = useStore();
+    const { events = [], user, fetchEvents } = useStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [filter, setFilter] = useState('All');
 
-    const categories = ['All', ...new Set(events.map(e => e.category))];
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
-    const filteredEvents = events.filter(event => {
-        const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (event.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ?? false);
-        const matchesCategory = filter === 'All' || event.category === filter;
-        return matchesSearch && matchesCategory;
-    });
+    let categories = ['All'];
+    for (let i = 0; i < events.length; i++) {
+        let cat = events[i].category;
+        let exists = false;
+        for (let j = 0; j < categories.length; j++) {
+            if (categories[j] === cat) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists === false) {
+            categories.push(cat);
+        }
+    }
+
+    let filteredEvents = [];
+    for (let i = 0; i < events.length; i++) {
+        let event = events[i];
+        
+        let matchesSearch = false;
+        let lowerSearchTerm = searchTerm.toLowerCase();
+        
+        let titleMatch = event.title.toLowerCase().includes(lowerSearchTerm);
+        if (titleMatch === true) {
+            matchesSearch = true;
+        } else {
+            if (event.tags) {
+                for (let j = 0; j < event.tags.length; j++) {
+                    let tag = event.tags[j];
+                    if (tag.toLowerCase().includes(lowerSearchTerm)) {
+                        matchesSearch = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        let matchesCategory = false;
+        if (filter === 'All') {
+            matchesCategory = true;
+        } else if (event.category === filter) {
+            matchesCategory = true;
+        }
+        
+        if (matchesSearch === true && matchesCategory === true) {
+            filteredEvents.push(event);
+        }
+    }
 
     return (
 

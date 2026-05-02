@@ -1,73 +1,122 @@
 import { create } from 'zustand';
+import { auth, db } from '../config/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import {
+  collection, query, getDocs, doc, getDoc, setDoc, addDoc,
+  updateDoc, arrayUnion, arrayRemove
+} from 'firebase/firestore';
 
-const MOCK_USER = {
-  id: 'u1',
-  name: 'Srijal',
-  email: 'srijal@example.com',
-  isAdmin: true,
-  interests: ['React', 'Web3', 'Dance', 'Hackathons'],
-  friends: ['u2', 'u3'],
-  enrollmentNumber: '',
-  collegeEmail: '',
-  phone: ''
-};
-
-
-const MOCK_EVENTS = [
-  {
-    id: 'e1',
-    title: 'Smart India Hackathon 2026',
-    description: '36-hour coding marathon to solve real-world problems.',
-    date: new Date(Date.now() + 86400000 * 5).toISOString(),
-    category: 'Hackathons',
-    tags: ['React', 'Node.js', 'AI'],
-    attendeeRoles: [],
-    participantRoles: ['Frontend Developer', 'Backend Developer', 'ML Engineer'],
-    managementRoles: ['Mentor', 'Judge'],
-    programs: ['10:00 AM - Opening Ceremony', '11:00 AM - Keynote Speech'],
-    rsvps: ['u1', 'u2'],
-    organizer: 'MoE Innovation Cell'
-  },
-  {
-    id: 'e2',
-    title: 'Inter-College Dance Competition',
-    description: 'Showcase your dancing skills in our annual fest!',
-    date: new Date(Date.now() + 86400000 * 12).toISOString(),
-    category: 'Dance',
-    tags: ['Dance', 'Cultural'],
-    attendeeRoles: [],
-    participantRoles: ['Solo Dancer', 'Group Dancer'],
-    managementRoles: ['Stage Manager', 'Sound Engineer'],
-    programs: [],
-    rsvps: ['u3'],
-    organizer: 'Cultural Committee'
-  },
-  {
-    id: 'e3',
-    title: 'Web3 Builders Meetup',
-    description: 'Connect with local Web3 developers and founders.',
-    date: new Date(Date.now() + 86400000 * 2).toISOString(),
-    category: 'Meetup',
-    tags: ['Web3', 'Blockchain', 'Networking'],
-    attendeeRoles: [],
-    participantRoles: [],
-    managementRoles: [],
-    programs: [],
-    rsvps: ['u4'],
-    organizer: 'Web3 India'
-  }
-];
-
-export const useStore = create((set) => ({
-  user: MOCK_USER,
-  events: MOCK_EVENTS,
+export const useStore = create((set, get) => ({
+  user: undefined,
+  events: [],
+  allUsers: [],
   notifications: [
     { id: 'n1', message: 'Smart India Hackathon has your favourite roles 🎯', read: false },
     { id: 'n2', message: 'Your friend is also joining Web3 Builders Meetup 👥', read: false },
     { id: 'n3', message: 'This event has Dance competition 🎉', read: true }
   ],
 
+
+  initAuth: () => {
+    onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        set({ user: null });
+        return;
+      }
+
+      const userRef = doc(db, 'users', firebaseUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        set({ user: { id: userSnap.id, ...userSnap.data() } });
+      } else {
+        const newUser = {
+          name: firebaseUser.displayName ?? '',
+          email: firebaseUser.email ?? '',
+          photoURL: firebaseUser.photoURL ?? '',
+          isAdmin: false,
+          interests: [],
+          friends: [],
+          enrollmentNumber: '',
+          collegeEmail: '',
+          phone: '',
+        };
+        await setDoc(userRef, newUser);
+        set({ user: { id: firebaseUser.uid, ...newUser } });
+      }
+    });
+  },
+
+
   login: (userData) => set({ user: userData }),
-  logout: () => set({ user: null }),
+
+  logout: async () => {
+    await signOut(auth);
+    set({ user: null });
+  },
+
+  updateAccountDetails: async (fields) => {
+    const { user } = get();
+    if (!user?.id) return;
+    try {
+      await updateDoc(doc(db, 'users', user.id), fields);
+      set({ user: { ...user, ...fields } });
+    } catch (error) {
+      console.error('Error updating account details:', error);
+    }
+  },
+
+  addFriend: async (friendId) => {
+    const { user } = get();
+    if (!user?.id) return;
+    try {
+      await updateDoc(doc(db, 'users', user.id), { friends: arrayUnion(friendId) });
+      set({ user: { ...user, friends: [...(user.friends ?? []), friendId] } });
+    } catch (error) {
+      console.error('Error adding friend:', error);
+    }
+  },
+
+  removeFriend: async (friendId) => {
+    const { user } = get();
+    if (!user?.id) return;
+    try {
+      await updateDoc(doc(db, 'users', user.id), { friends: arrayRemove(friendId) });
+      set({ user: { ...user, friends: (user.friends ?? []).filter(id => id !== friendId) } });
+    } catch (error) {
+      console.error('Error removing friend:', error);
+    }
+  },
+
   
+  fetchAllUsers: async () => {
+    try {
+      const snapshot = await getDocs(collection(db, 'users'));
+      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      set({ allUsers: users });
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  },
+
+  
+  fetchEvents: async () => {
+    try {
+      const q = query(collection(db, 'events'));
+      const snapshot = await getDocs(q);
+      const eventData = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      set({ events: eventData });
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  },
+
+  addEvent: async (event) => {
+    try {
+      const docRef = await addDoc(collection(db, 'events'), event);
+      set((state) => ({ events: [...state.events, { id: docRef.id, ...event }] }));
+    } catch (error) {
+      console.error('Error adding event:', error);
+    }
+  },
 }));
