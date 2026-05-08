@@ -6,6 +6,7 @@ import { useStore } from './store/useStore';
 import Auth from './pages/Auth';
 import CreateEvent from './pages/CreateEvent';
 import Profile from './pages/Profile';
+import MyEvents from './pages/MyEvents';
 
 
 const ProtectedRoute = ({ children }) => {
@@ -38,11 +39,12 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 md:pb-8">
           <Routes>
             <Route path="/login" element={<Auth />} />
             <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/create-event" element={<AdminRoute><CreateEvent /></AdminRoute>} />
+            <Route path="/my-event" element={<ProtectedRoute><MyEvents /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           </Routes>
         </main>

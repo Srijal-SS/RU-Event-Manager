@@ -7,7 +7,7 @@ import Modal from './Modal';
 
 
 export default function EventCard({ event }) {
-    const { user, rsvpToEvent } = useStore();
+    const { user, responseToEvent } = useStore();
 
     const [showDetails, setShowDetails] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
@@ -16,8 +16,8 @@ export default function EventCard({ event }) {
     const [selectedVolunteerRole, setSelectedVolunteerRole] = useState(null);
     const [joinConfirmed, setJoinConfirmed] = useState(false);
 
-    const isAttending = event.rsvps.includes(user?.id);
-    const friendsAttending = event.rsvps.filter(id => user?.friends.includes(id));
+    const isAttending = (event.responses || []).includes(user?.id);
+    const friendsAttending = (event.responses || []).filter(id => (user?.friends || []).includes(id));
 
     const hasParticipants = (event.participantRoles || []).length > 0;
     const hasVolunteers = (event.managementRoles || []).length > 0;
@@ -47,9 +47,9 @@ export default function EventCard({ event }) {
     };
 
     const handleConfirmJoin = () => {
-        rsvpToEvent(event.id);
+        responseToEvent(event.id);
         setJoinConfirmed(true);
-        setTimeout(() => { setShowJoinModal(false); resetJoinModal(); }, 1800);
+        setTimeout(() => { setShowJoinModal(false); resetJoinModal(); }, 2000);
     };
 
     const JoinButton = ({ onClick }) => (
@@ -63,10 +63,10 @@ export default function EventCard({ event }) {
 
     const CancelButton = () => (
         <button
-            onClick={() => rsvpToEvent(event.id)}
+            onClick={() => responseToEvent(event.id)}
             className="px-6 py-2 rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
         >
-            Cancel RSVP
+            Cancel Response
         </button>
     );
 
@@ -120,7 +120,7 @@ export default function EventCard({ event }) {
                         <Eye size={16} /> Show Details
                     </button>
                     <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                        <span className="text-sm text-gray-500 font-medium">{event.rsvps.length} attending</span>
+                        <span className="text-sm text-gray-500 font-medium">{(event.responses || []).length} attending</span>
                         {isAttending
                             ? <CancelButton />
                             : <JoinButton onClick={() => { resetJoinModal(); setShowJoinModal(true); }} />
@@ -232,15 +232,13 @@ export default function EventCard({ event }) {
                 )}
 
                 <div className="flex justify-between items-center pt-6 border-t border-gray-100">
-                    <span className="text-sm text-gray-500 font-medium">{event.rsvps.length} people attending</span>
+                    <span className="text-sm text-gray-500 font-medium">{(event.responses || []).length} people attending</span>
                     {isAttending
                         ? <CancelButton />
                         : <JoinButton onClick={() => { setShowDetails(false); resetJoinModal(); setShowJoinModal(true); }} />
                     }
                 </div>
             </Modal>
-
-
 
 
             <Modal

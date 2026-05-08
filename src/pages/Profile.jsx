@@ -98,7 +98,7 @@ export default function Profile() {
             className="w-32 h-32 rounded-full object-cover shadow-lg shrink-0 border-4 border-white ring-2 ring-indigo-100"
           />
         ) : (
-          <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center shadow-lg text-white text-4xl font-bold shrink-0">
+          <div className="w-32 h-32 bg-gradient-to-br from-[#e35424] to-violet-500 rounded-full flex items-center justify-center shadow-lg text-white text-4xl font-bold shrink-0">
             {firstChar}
           </div>
         )}
@@ -131,7 +131,7 @@ export default function Profile() {
 
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
-              <div className="p-2 bg-violet-50 text-violet-600 rounded-lg">
+              <div className="p-2 bg-[#FFF1EB] text-[#e35424] rounded-lg">
                 <BookUser size={20} />
               </div>
               <h2 className="text-xl font-bold text-gray-900">Account Details</h2>
@@ -152,7 +152,7 @@ export default function Profile() {
                       onChange={handleAccountChange}
                       type="text"
                       placeholder="Your full name"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#e35424] focus:border-[#e35424] transition-all outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function Profile() {
                       onChange={handleAccountChange}
                       type="text"
                       placeholder="e.g. 22BTECH1001"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#e35424] focus:border-[#e35424] transition-all outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export default function Profile() {
                       onChange={handleAccountChange}
                       type="email"
                       placeholder="you@university.edu.in"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#e35424] focus:border-[#e35424] transition-all outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export default function Profile() {
                       onChange={handleAccountChange}
                       type="tel"
                       placeholder="+91 XXXXX XXXXX"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#e35424] focus:border-[#e35424] transition-all outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function Profile() {
               <div className="flex items-center gap-4 pt-2">
                 <button
                   type="submit"
-                  className="bg-violet-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-violet-700 transition-all"
+                  className="bg-[#e35424] text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-[#dd3f0a] transition-all"
                 >
                   Save Account Details
                 </button>
@@ -229,7 +229,7 @@ export default function Profile() {
 
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+              <div className="p-2 bg-[#FFF1EB] text-[#e35424] rounded-lg">
                 <Settings size={20} />
               </div>
               <h2 className="text-xl font-bold text-gray-900">Preferences</h2>
@@ -259,7 +259,7 @@ export default function Profile() {
               <div className="flex items-center gap-4">
                 <button
                   type="submit"
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition-all"
+                  className="bg-[#e35424] text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-[#dd3f0a] transition-all"
                 >
                   Save Preferences
                 </button>
@@ -273,7 +273,7 @@ export default function Profile() {
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 h-fit space-y-6">
           <div>
             <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
-              <div className="p-2 bg-violet-50 text-violet-600 rounded-lg">
+              <div className="p-2 bg-[#FFF1EB] text-[#e35424] rounded-lg">
                 <UserIcon size={20} />
               </div>
               <h2 className="text-xl font-bold text-gray-900">Connections</h2>
@@ -286,7 +286,7 @@ export default function Profile() {
               </span>
             </div>
             <p className="text-sm text-gray-500 leading-relaxed">
-              When your friends RSVP to events, you'll be notified so you can join them!
+              When your friends response to events, you'll be notified so you can join them!
             </p>
           </div>
 

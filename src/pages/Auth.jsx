@@ -27,7 +27,7 @@ export default function Auth() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="bg-white p-10 rounded-3xl shadow-xl border border-gray-100 max-w-md w-full text-center">
-        <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-200">
+        <div className="w-16 h-16 bg-[#CA4317] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-200">
           <Calendar size={32} className="text-white" strokeWidth={2.5} />
         </div>
 

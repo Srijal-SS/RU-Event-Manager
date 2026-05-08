@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../config/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
@@ -51,8 +52,10 @@ export const useStore = create((set, get) => ({
   login: (userData) => set({ user: userData }),
 
   logout: async () => {
-    await signOut(auth);
+    await signOut(auth || undefined);
     set({ user: null });
+    const navigate = useNavigate();
+    navigate('/login');
   },
 
   updateAccountDetails: async (fields) => {
@@ -65,6 +68,7 @@ export const useStore = create((set, get) => ({
       console.error('Error updating account details:', error);
     }
   },
+
 
   addFriend: async (friendId) => {
     const { user } = get();
@@ -98,6 +102,17 @@ export const useStore = create((set, get) => ({
       console.error('Error fetching users:', error);
     }
   },
+
+  responseToEvent: (eventId) => set((state) => ({
+    events: state.events.map(ev => 
+      ev.id === eventId 
+        ? { ...ev, responses: ev.responses.includes(state.user?.id) 
+            ? ev.responses.filter(id => id !== state.user?.id)
+            : [...ev.responses, state.user?.id] 
+          }
+        : ev
+    )
+  })),
 
   
   fetchEvents: async () => {

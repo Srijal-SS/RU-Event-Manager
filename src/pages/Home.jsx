@@ -13,6 +13,7 @@ export default function Home() {
         fetchEvents();
     }, []);
 
+
     let categories = ['All'];
     for (let i = 0; i < events.length; i++) {
         let cat = events[i].category;
@@ -73,7 +74,7 @@ export default function Home() {
                         Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Events</span>
                     </h1>
                     <p className="text-lg text-gray-600 mb-8">
-                        Find the best hackathons, meetups, and competitions tailored to your interests, {user.name}.
+                        Find the best hackathons, competitions, and other events which matches your interests, {user.name}.
                     </p>
 
 
